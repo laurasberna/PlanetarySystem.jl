@@ -1,3 +1,3 @@
 using PlanetarySystem
 
-
+@show greet()

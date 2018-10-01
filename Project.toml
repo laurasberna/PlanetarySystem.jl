@@ -1,6 +1,4 @@
-authors = ["Laura Sberna <laura92sb@gmail.com>"]
 name = "PlanetarySystem"
 uuid = "c26eae82-c525-11e8-1ac3-9b19f7ad6b3d"
+authors = ["Laura Sberna <laura92sb@gmail.com>"]
 version = "0.1.0"
-
-[deps]

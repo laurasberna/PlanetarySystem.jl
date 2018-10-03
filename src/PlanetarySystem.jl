@@ -1,11 +1,14 @@
 module PlanetarySystem
 using DifferentialEquations
 using RecursiveArrayTools
+#using Plots
+#using HDF5
+#using ImageMagick
 
 # Newton's constant, sum symbol and number of objects (central star included)
 const G = 2.95912208286e-4
 const ∑ = sum
-const N = 6
+const N = 5#6
 
 
 # Gravitational newtonian potential
@@ -21,13 +24,38 @@ function NBsolution(M, vel, pos, tspan)
 end
 
 
-# Write to file
+#=Write to file in HDF5 form
+export writefile
+function writefile(sol, filename::String)
+    h5write(filename, "data", sol)
+    end
+
+#Read back
+export readfile
+function readfile(filename::String)
+    data=h5read(filename, "data")
+end=#
 
 
-# Read from file
+#=Plot
+export myplot
+function myplot(sol, planets::Array{String,1}, filename::String, mytitle::String)
+    #pyplot()
+    orbitplot(sol,
+              body_names=planets,
+              xlim=(-0.01,0.01), ylim=(-0.01,0.01), zlim=(-0.005,0.005),
+              w=1.5,
+              xlabel = "x", ylabel = "y", zlabel = "z",
+              legend=:bottomleft,
+              size=(800, 600),
+              title  = mytitle)
+    savefig(filename)
+    end =#
 
-
-# Nice plot
-
+#Animation
+export animation
+function animation(sol, filename::String)
+    animate(sol,lw=3,every=100,filename)
+end
 
 end # module

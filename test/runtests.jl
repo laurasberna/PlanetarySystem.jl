@@ -28,10 +28,10 @@ tspan = (0.,200_000)
 #Testing solver
 mysol=NBsolution(M, vel, pos, tspan)
 
-#Testing plot
-#myplot(mysol,planets,plotfilename,mytitle)
+#Testing orbit plot
+myplot(mysol,plotfilename,planets,mytitle)
 
-#=Testing write to file
+#=Testing write to file  (not working)
 filename="sol.h5"
 rm(filename, force=true)
 writefile(mysol,filename)
@@ -40,7 +40,6 @@ writefile(mysol,filename)
 mysol2=readfile(filename)
 #@test isequal(mysol2,mysol)=#
 
-#Testing animation
-#animation(mysol,animfilename)
+#Testing animation 
+#animation(mysol,animfilename,planets,mytitle)
 
-(mysol[16,1],mysol[21,1],mysol[26,1])

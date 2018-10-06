@@ -22,14 +22,18 @@ pot(x, y, z, M)= - G*∑(i->∑(j->(M[i]*M[j])./sqrt.((x[i,:]-x[j,:]).^2+(y[i,:]
 export H
 H(x, y, z, vx, vy, vz, M) = kinetic(vx, vy, vz, M) + pot(x, y, z, M)'
 #Angular momentum
-L(x, y, z, vx, vy, vz, M) = ∑(i-> M[i] .* sqrt.( (vy[i,:] .* x[i,:] - vx[i,:] .* y[i,:]).^2 + (-vz[i,:] .* x[i,:] + vx[i,:] .* z[i,:]).^2 + (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]).^2 ), 1:N)'
+#L(x, y, z, vx, vy, vz, M) = ∑(i-> M[i] .* sqrt.( (vy[i,:] .* (x[i,:]-x[1,:]) - vx[i,:] .* (y[i,:]-y[1,:])).^2 + (-vz[i,:] .* (x[i,:]-x[1,:]) + vx[i,:] .* (z[i,:]-z[1,:])).^2 + (vz[i,:] .* (y[i,:]-y[1,:]) - vy[i,:] .* (z[i,:]-z[1,:])).^2 ), 2:N)'
+Lx(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vy[i,:] .* x[i,:] - vx[i,:] .* y[i,:]), 1:N)'
+Ly(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (-vz[i,:] .* x[i,:] + vx[i,:] .* z[i,:]), 1:N)'
+Lz(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]), 1:N)'  
+
 
 # Solves the N-body problem with a sympletic method, Yoshida6.
 # Arguments are the masses, initial velocities and positions and time interval
 export NBsolution
 function NBsolution(M, vel, pos, tspan)
     nprob = NBodyProblem(potential, M, vel, pos, tspan)
-    sol = solve(nprob,Yoshida6(), dt=100)
+    sol = solve(nprob,Yoshida6(), dt=10)#100
 end
 
 
@@ -109,11 +113,13 @@ function plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planet
     x= sol[3*N+1:4*N,:]
     y= sol[4*N+1:5*N,:]
     z= sol[5*N+1:6*N,:]
-    plot(sol.t, H(x, y, z, vx, vy, vz, M)[1] .- H(x, y, z, vx, vy, vz, M)',
+    plot(sol.t, (H(x, y, z, vx, vy, vz, M)[1] .- H(x, y, z, vx, vy, vz, M)')./H(x, y, z, vx, vy, vz, M)[1],
          lab="Energy variation",
-         title="First Integrals",
-         xlabel="t")
-   plot!(sol.t, L(x, y, z, vx, vy, vz, M)[1].-L(x, y, z, vx, vy, vz, M)', lab="Angular momentum variation")
+         title="Conserved Quantities",
+         xlabel="t") 
+    plot!(sol.t, (Lx(x, y, z, vx, vy, vz, M)[1].-Lx(x, y, z, vx, vy, vz, M)')./Lx(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, x")
+    plot!(sol.t, (Ly(x, y, z, vx, vy, vz, M)[1].-Ly(x, y, z, vx, vy, vz, M)')./Ly(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, y")
+    plot!(sol.t, (Lz(x, y, z, vx, vy, vz, M)[1].-Lz(x, y, z, vx, vy, vz, M)')./Lz(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, z")
 
     savefig(filename)
    # return    pot(x, y, z, M)

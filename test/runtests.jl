@@ -5,6 +5,7 @@ using Plots
 
 plotfilename="mysol.png"
 animfilename="mysol.gif"
+fifilename="firstintegrals.png"
 mytitle="Planetary System (outer bodies of Solar system)"
 
 #System parameters:
@@ -29,7 +30,35 @@ tspan = (0.,200_000)
 mysol=NBsolution(M, vel, pos, tspan)
 
 #Testing orbit plot
-myplot(mysol,plotfilename,planets,mytitle)
+#myplot(mysol,plotfilename,planets,mytitle)
+
+#Testing animation 
+#animation(mysol,animfilename,planets,mytitle)
+
+#Initial energy
+#@show H(pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,M)
+
+#Plot energy
+N=5
+#@show length(mysol.t)
+#@show length(plot_first_integrals(mysol, M, fifilename, planets))
+plot_first_integrals(mysol, M, fifilename, planets)
+#@show length(mysol[3*N+1:4*N,:])
+#@show mysol[1:N,:]
+#x=zeros(N,length(mysol.t))
+#for i in 1:N x[i,:]=mysol[3*N+i,:] end
+#@show x[1,:]
+#=    vx=sol[1:N,1:2]
+    vy=sol[N+1:2*N,1:2]
+    vz=sol[2*N+1:3*N,1:2]
+    x= sol[3*N+1:4*N,1:2]
+    y= sol[4*N+1:5*N,1:2]
+z= sol[5*N+1:6*N,1:2]
+@show H(x, y, z, vx, vy, vz, M)
+@show H(x, y, z, vx, vy, vz, M)[1]=#
+#@show vx.*vx
+#@show sum(M.*vx.*vx,dims=1)
+
 
 #=Testing write to file  (not working)
 filename="sol.h5"
@@ -39,7 +68,3 @@ writefile(mysol,filename)
 #Testing read from file
 mysol2=readfile(filename)
 #@test isequal(mysol2,mysol)=#
-
-#Testing animation 
-#animation(mysol,animfilename,planets,mytitle)
-

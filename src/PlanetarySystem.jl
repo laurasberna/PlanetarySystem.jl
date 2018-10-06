@@ -2,6 +2,7 @@ module PlanetarySystem
 using DifferentialEquations
 using RecursiveArrayTools
 using Plots
+using LinearAlgebra
 #using HDF5
 #using ImageMagick
 
@@ -14,9 +15,14 @@ const N = 5#6
 # Gravitational newtonian potential
 potential(p, t, x, y, z, M) = -G*∑(i->∑(j->(M[i]*M[j])/sqrt((x[i]-x[j])^2 + (y[i]-y[j])^2 + (z[i]-z[j])^2), 1:i-1), 2:N)
 #Kinetic energy
+kinetic(vx, vy, vz, M) = 1/2 * ( ∑(M.*vx.*vx,dims=1) + ∑(M.*vy.*vy,dims=1) + ∑(M.*vz.*vz,dims=1) )
+#potential again
+pot(x, y, z, M)= - G*∑(i->∑(j->(M[i]*M[j])./sqrt.((x[i,:]-x[j,:]).^2+(y[i,:]-y[j,:]).^2+(z[i,:]-z[j,:]).^2), 1:i-1), 2:N)                                         
 #Hamiltonian
+export H
+H(x, y, z, vx, vy, vz, M) = kinetic(vx, vy, vz, M) + pot(x, y, z, M)'
 #Angular momentum
-
+L(x, y, z, vx, vy, vz, M) = ∑(i-> M[i] .* sqrt.( (vy[i,:] .* x[i,:] - vx[i,:] .* y[i,:]).^2 + (-vz[i,:] .* x[i,:] + vx[i,:] .* z[i,:]).^2 + (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]).^2 ), 1:N)'
 
 # Solves the N-body problem with a sympletic method, Yoshida6.
 # Arguments are the masses, initial velocities and positions and time interval
@@ -91,14 +97,28 @@ function animation(sol, filename::String, planets::Array{String,1}, mytitle::Str
 
 end
 
-#=
+
 #First integrals: energy and angular momentum
-function plot_first_integrals()
+export plot_first_integrals
+function plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planets::Array{String,1})
+    #H(x, y, z, vx, vy, vz, M) need to build the x,y,z and vx,vy,vz arrays
+    #initial_first_integrals[1]
+    vx=sol[1:N,:]
+    vy=sol[N+1:2*N,:]
+    vz=sol[2*N+1:3*N,:]
+    x= sol[3*N+1:4*N,:]
+    y= sol[4*N+1:5*N,:]
+    z= sol[5*N+1:6*N,:]
+    plot(sol.t, H(x, y, z, vx, vy, vz, M)[1] .- H(x, y, z, vx, vy, vz, M)',
+         lab="Energy variation",
+         title="First Integrals",
+         xlabel="t")
+   plot!(sol.t, L(x, y, z, vx, vy, vz, M)[1].-L(x, y, z, vx, vy, vz, M)', lab="Angular momentum variation")
 
-    plot(initial_first_integrals[1]-map(u->H(u[2,:], u[1,:]), sol.u), lab="Energy variation", title="First Integrals")
-    plot!(initial_first_integrals[2]-map(u->L(u[2,:], u[1,:]), sol.u), lab="Angular momentum variation")
-
+    savefig(filename)
+   # return    pot(x, y, z, M)
 end
-=#
+
+
 
 end # module

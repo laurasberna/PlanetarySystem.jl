@@ -1,5 +1,4 @@
 using PlanetarySystem
-#using Test
 using RecursiveArrayTools
 using Plots
 
@@ -24,47 +23,18 @@ vel_y = [0.0,-0.00412490,0.00483525,0.00137102,0.00114527]#,-0.00170702]
 vel_z = [0.0,-0.00190589,0.00192462,0.00055029,0.00039677]#,-0.00136504]
 vel = ArrayPartition(vel_x,vel_y,vel_z)
 #time interval
-tspan = (0.,200_000)
+tspan = (0.,200_000.)
 
 #Testing solver
-mysol=NBsolution(M, vel, pos, tspan)
+sol=NBsolution(M, vel, pos, tspan)
 
 #Testing orbit plot
-#myplot(mysol,plotfilename,planets,mytitle)
+#myplot(sol,plotfilename,planets,mytitle)
 
 #Testing animation 
-#animation(mysol,animfilename,planets,mytitle)
+#animation(sol,animfilename,planets,mytitle)
 
-#Initial energy
-#@show H(pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,M)
-
-#Plot energy
-N=5
-#@show length(mysol.t)
-#@show length(plot_first_integrals(mysol, M, fifilename, planets))
-plot_first_integrals(mysol, M, fifilename, planets)
-#@show length(mysol[3*N+1:4*N,:])
-#@show mysol[1:N,:]
-#x=zeros(N,length(mysol.t))
-#for i in 1:N x[i,:]=mysol[3*N+i,:] end
-#@show x[1,:]
-#=    vx=sol[1:N,1:2]
-    vy=sol[N+1:2*N,1:2]
-    vz=sol[2*N+1:3*N,1:2]
-    x= sol[3*N+1:4*N,1:2]
-    y= sol[4*N+1:5*N,1:2]
-z= sol[5*N+1:6*N,1:2]
-@show H(x, y, z, vx, vy, vz, M)
-@show H(x, y, z, vx, vy, vz, M)[1]=#
-#@show vx.*vx
-#@show sum(M.*vx.*vx,dims=1)
+#Testing conservation of energy and angular momentum (plot)
+#plot_first_integrals(sol, M, fifilename, planets)
 
 
-#=Testing write to file  (not working)
-filename="sol.h5"
-rm(filename, force=true)
-writefile(mysol,filename)
-
-#Testing read from file
-mysol2=readfile(filename)
-#@test isequal(mysol2,mysol)=#

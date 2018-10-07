@@ -7,7 +7,10 @@ The package solves the N-body problem in Newtonian gravity and is based on the [
 ## Dependencies
 
 ```
- Pkg.add("DifferentialEquations"), Pkg.add("RecursiveArrayTools"), Pkg.add("Plots"), Pkg.add("LinearAlgebra")
+ Pkg.add("DifferentialEquations") 
+ Pkg.add("RecursiveArrayTools") 
+ Pkg.add("Plots") 
+ Pkg.add("LinearAlgebra")
 ```
 
 ## Functions
@@ -15,6 +18,22 @@ The package solves the N-body problem in Newtonian gravity and is based on the [
 ```
  NBsolution(M, vel, pos, tspan)
  ```
+ To solve the N-Body problem.
+ 
+ ```
+ myplot(sol, filename::String, planets::Array{String,1}, mytitle::String)
+ ```
+ To plot the orbit in 3D.
+ 
+ ```
+ animation(sol, filename::String, planets::Array{String,1}, mytitle::String)`
+ ```
+ To animate the system in 3D. Expects a .gif file name.
+ 
+ ```
+ plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planets::Array{String,1})
+ ```
+To plot the fractional variation of the conserved quantities (energy and angular momentum vector).
 
 ## Acknowledgements 
 

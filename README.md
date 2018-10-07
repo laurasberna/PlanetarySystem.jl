@@ -16,7 +16,7 @@ The package solves the N-body problem in Newtonian gravity and is based on the [
 ## Functions
 
 ```
- NBsolution(M, vel, pos, tspan)
+ NBsolution(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64})
  ```
  To solve the N-Body problem.
  

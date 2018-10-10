@@ -6,39 +6,62 @@ using LinearAlgebra
 
 
 const G = 2.95912208286e-4 # Newton's constant
-const ∑ = sum
+const ∑ = sum # symbol for sum function
 const N = 5 #Number of bodies (central star included)
 
 
-#Physical model:
+#############################################################
 
-# Gravitational newtonian potential
+# Physical model:
+
+# Gravitational newtonian potential for the NBsolution() solver.
+# p is a parameter, t the time, the coordinates x, y, z are arrays running over the bodies,
+# M is the array of the bodies' masses
 potential(p, t, x, y, z, M) = -G*∑(i->∑(j->(M[i]*M[j])/sqrt((x[i]-x[j])^2 + (y[i]-y[j])^2 + (z[i]-z[j])^2), 1:i-1), 2:N)
-#Kinetic energy
+
+# Kinetic energy
+# the velocity components  vx, vy, vz are 2D arrays running over the bodies and the time steps,
+# M is the array of the bodies' masses
 kinetic(vx, vy, vz, M) = 1/2 * ( ∑(M.*vx.*vx,dims=1) + ∑(M.*vy.*vy,dims=1) + ∑(M.*vz.*vz,dims=1) )
-#potential again
+# potential, to compute the Hamiltonian
+# the coordinates x, y, z are 2D arrays running over the bodies and the time steps,
+# M is the array of the bodies' masses
 pot(x, y, z, M)= - G*∑(i->∑(j->(M[i]*M[j])./sqrt.((x[i,:]-x[j,:]).^2+(y[i,:]-y[j,:]).^2+(z[i,:]-z[j,:]).^2), 1:i-1), 2:N)
-#Hamiltonian
+
+# Hamiltonian (total energy) - variables as above
 H(x, y, z, vx, vy, vz, M) = kinetic(vx, vy, vz, M) + pot(x, y, z, M)'
-#Angular momentum
+
+# Angular momentum components  - variables as above
 Lx(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vy[i,:] .* x[i,:] - vx[i,:] .* y[i,:]), 1:N)'
 Ly(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (-vz[i,:] .* x[i,:] + vx[i,:] .* z[i,:]), 1:N)'
 Lz(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]), 1:N)'  
 
+#############################################################
+
 
 # Solves the N-body problem with a sympletic method, Yoshida6.
+
+# M is the array of the bodies' masses,
+# vel contains the initial velocity vectors of all bodies (see example in Readme)
+# pos contains the initial position of all bodies (see example in Readme)
+# tspan is the time interval
+
 export NBsolution
 function NBsolution(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64})
     nprob = NBodyProblem(potential, M, vel, pos, tspan)
-    sol = solve(nprob,Yoshida6(), dt=10)#100
+    sol = solve(nprob, Yoshida6(), dt=10) # can change the method or the time step dt
 end
 
 
-#Plot of the orbits in coordinate space
+# Plots the orbits in coordinate space and saves to file
+# sol is the output of NBsolution()
+# filename is the name of the file where the plot is saved
+# planets is the array of the planets' names
+
 export myplot
-function myplot(sol, filename::String, planets::Array{String,1}, mytitle::String)
+function myplot(sol, filename::String, planets::Array{String,1})
     plot(size=(800, 600),
-         title  = mytitle,
+         title  = "Planetary orbits",
          legend=:bottomleft,
          xlim=(-30,30), ylim=(-30,30), zlim=(-30,30)
          ,markerstrokewidth=0
@@ -55,11 +78,15 @@ function myplot(sol, filename::String, planets::Array{String,1}, mytitle::String
     end
           
     savefig(filename)
-    end 
+end
 
-#Animation
+
+
+# Animates the planets and saves to file
+# see above
+
 export animation
-function animation(sol, filename::String, planets::Array{String,1}, mytitle::String)
+function animation(sol, filename::String, planets::Array{String,1})
     
     nplots=500 
     element(i)=round(Int, length(sol.t)/nplots-1)*i
@@ -72,7 +99,7 @@ function animation(sol, filename::String, planets::Array{String,1}, mytitle::Str
                 markerstrokewidth=0,
                 markercolor=:yellow,
                 marker=10,
-                title  = mytitle)
+                title  = "Planetary orbits")
         if(N>1)
             for j in 2:(N)
         scatter!((sol[3*N+j,element(i)],sol[4*N+j,element(i)],sol[5*N+j,element(i)]),
@@ -88,7 +115,9 @@ function animation(sol, filename::String, planets::Array{String,1}, mytitle::Str
 end
 
 
-#First integrals: energy and angular momentum
+# Plots the fractional variation of conserved quantities (energy and angular momentum)
+# see above
+
 export plot_first_integrals
 function plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planets::Array{String,1})
     

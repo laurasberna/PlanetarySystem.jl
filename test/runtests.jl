@@ -5,7 +5,6 @@ using Plots
 plotfilename="mysol.png"
 animfilename="mysol.gif"
 fifilename="firstintegrals.png"
-mytitle="Planetary System (outer bodies of Solar system)"
 
 #System parameters:
 #masses and names
@@ -29,10 +28,10 @@ tspan = (0.,200_000.)
 sol=NBsolution(M, vel, pos, tspan)
 
 #Testing orbit plot
-#myplot(sol,plotfilename,planets,mytitle)
+#myplot(sol,plotfilename,planets)
 
 #Testing animation 
-#animation(sol,animfilename,planets,mytitle)
+#animation(sol,animfilename,planets)
 
 #Testing conservation of energy and angular momentum (plot)
 #plot_first_integrals(sol, M, fifilename, planets)

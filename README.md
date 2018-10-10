@@ -3,6 +3,7 @@
 This Julia package was produced for an assignment of the Computational Physics course held by Erik Schnetter at Perimeter Institute, during the Fall term of 2018.
 
 The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. This package is based on the [DifferentialEquations package tutorial](https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb).
+Units: distance is expressed in A.U., time in Earth days, mass in Sun masses.
 
 ## Dependencies
 
@@ -37,7 +38,7 @@ To plot the fractional variation of the conserved quantities (energy and angular
 
 ## Example
 
-In this example we solve a planetary system, save a plot of the orbits in position space, save an animation of the system and save a plot of the fractional variation of the conserved quantities. 
+In this example we solve a planetary system, namely the outer Solar system planets, save a plot of the orbits in position space, save an animation of the system and save a plot of the fractional variation of the conserved quantities. Note that M1>1 takes the inner planets into account.
 
  ```
 using PlanetarySystem

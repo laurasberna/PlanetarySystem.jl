@@ -2,8 +2,9 @@
 
 This Julia package was produced for an assignment of the Computational Physics course held by Erik Schnetter at Perimeter Institute, during the Fall term of 2018.
 
-The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. This package is based on the [DifferentialEquations package tutorial](https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb).
-Units: distance is expressed in A.U., time in Earth days, mass in Sun masses.
+The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. Distance is expressed in A.U., time in Earth days, mass in Sun masses.
+
+This package is based on the [DifferentialEquations package tutorial](https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb).
 
 ## Dependencies
 

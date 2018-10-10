@@ -2,7 +2,7 @@
 
 This Julia package was produced for an assignment of the Computational Physics course held by Erik Schnetter at Perimeter Institute, during the Fall term of 2018.
 
-The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. Distance is expressed in A.U., time in Earth days, mass in Sun masses.
+The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. Distance is expressed in A.U., time in Earth days, mass in central star masses.
 
 This package is based on the [DifferentialEquations package tutorial](https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb).
 
@@ -50,7 +50,6 @@ animfilename="mysol.gif"
 fifilename="firstintegrals.png"
 
 M = [1.00000597682, 0.000954786104043, 0.000285583733151, 0.0000437273164546, 0.0000517759138449]
-invM = inv.(M)
 planets = ["Sun", "Jupiter", "Saturn", "Uranus", "Neptune"] 
 
 pos_x = [0.0,-3.5023653,9.0755314,8.3101420,11.4707666]
@@ -76,7 +75,9 @@ plot_first_integrals(sol, M, fifilename, planets)
  ![orbitsanim](https://i.imgur.com/AfvHrf6.gif)
  ![conservation](https://i.imgur.com/yLKs14W.png)
 
-## The tests 
+## Test
+
+The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0). The test verifies the conservation of energy and angular momentum.
 
 ## Acknowledgements 
 

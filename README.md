@@ -11,7 +11,6 @@ Before activating the package, add the following packages:
  Pkg.add("DifferentialEquations") 
  Pkg.add("RecursiveArrayTools") 
  Pkg.add("Plots") 
- Pkg.add("LinearAlgebra")
 ```
 
 ## Functions
@@ -19,7 +18,7 @@ Before activating the package, add the following packages:
 ```
  NBsolution(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64})
  ```
-To solve the N-Body problem.  vel is the ArrayPartition of the initial velocities of all bodies (see example), pos is the ArrayPartition of the initial positions of all bodies (see example), tspan is the time interval.
+To solve the N-Body problem.  vel is the ArrayPartition of the initial velocities of all bodies (see [example](#example)), pos is the ArrayPartition of the initial positions of all bodies, tspan is the time interval.
  
  ```
  myplot(sol, filename::String, planets::Array{String,1})
@@ -71,9 +70,9 @@ plot_first_integrals(sol, M, fifilename, planets)
  ```
  The resulting plots:
  
- ![orbits](https://i.imgur.com/5kZvvUG.png)
- ![orbitsanim](https://i.imgur.com/MpgUPsP.gif)
- ![conservation](https://i.imgur.com/3HMLUcd.png)
+ ![orbits](https://i.imgur.com/pHHsZg3.png)
+ ![orbitsanim](https://i.imgur.com/AfvHrf6.gif)
+ ![conservation](https://i.imgur.com/yLKs14W.png)
 
 ## The tests 
 

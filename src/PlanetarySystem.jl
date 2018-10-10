@@ -1,8 +1,12 @@
+# The package contains tools to solve an N-body problem in Newtonian gravity,
+# and plot and animate the orbits and the consverved quantities.
+# This package is based on the DifferentialEquations package tutorial:
+# https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb
+
 module PlanetarySystem
 using DifferentialEquations
 using RecursiveArrayTools
 using Plots
-using LinearAlgebra
 
 
 const G = 2.95912208286e-4 # Newton's constant
@@ -52,6 +56,7 @@ function NBsolution(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64}
     sol = solve(nprob, Yoshida6(), dt=10) # can change the method or the time step dt
 end
 
+#############################################################
 
 # Plots the orbits in coordinate space and saves to file
 # sol is the output of NBsolution()
@@ -60,7 +65,7 @@ end
 
 export myplot
 function myplot(sol, filename::String, planets::Array{String,1})
-    plot(size=(800, 600),
+    plot(size=(500, 400),
          title  = "Planetary orbits",
          legend=:bottomleft,
          xlim=(-30,30), ylim=(-30,30), zlim=(-30,30)
@@ -73,14 +78,14 @@ function myplot(sol, filename::String, planets::Array{String,1})
     scatter!(sol,
               vars=(3*N+i,4*N+i,5*N+i),
               label=planets[i],
-              markersize=3,
+              markersize=1,
               markerstrokewidth=0)
     end
           
     savefig(filename)
 end
 
-
+#############################################################
 
 # Animates the planets and saves to file
 # see above
@@ -99,7 +104,8 @@ function animation(sol, filename::String, planets::Array{String,1})
                 markerstrokewidth=0,
                 markercolor=:yellow,
                 marker=10,
-                title  = "Planetary orbits")
+                title  = "Planetary system",
+                size=(500, 400))
         if(N>1)
             for j in 2:(N)
         scatter!((sol[3*N+j,element(i)],sol[4*N+j,element(i)],sol[5*N+j,element(i)]),
@@ -114,6 +120,7 @@ function animation(sol, filename::String, planets::Array{String,1})
 
 end
 
+#############################################################
 
 # Plots the fractional variation of conserved quantities (energy and angular momentum)
 # see above
@@ -131,7 +138,8 @@ function plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planet
     plot(sol.t, (H(x, y, z, vx, vy, vz, M)[1] .- H(x, y, z, vx, vy, vz, M)')./H(x, y, z, vx, vy, vz, M)[1],
          lab="Energy variation",
          title="Conserved Quantities",
-         xlabel="t") 
+         xlabel="t",
+         size=(500, 400)) 
     plot!(sol.t, (Lx(x, y, z, vx, vy, vz, M)[1].-Lx(x, y, z, vx, vy, vz, M)')./Lx(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, x")
     plot!(sol.t, (Ly(x, y, z, vx, vy, vz, M)[1].-Ly(x, y, z, vx, vy, vz, M)')./Ly(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, y")
     plot!(sol.t, (Lz(x, y, z, vx, vy, vz, M)[1].-Lz(x, y, z, vx, vy, vz, M)')./Lz(x, y, z, vx, vy, vz, M)[1], lab="Angular momentum variation, z")

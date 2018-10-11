@@ -9,7 +9,7 @@ using RecursiveArrayTools
 using Plots
 
 
-const G = 2.95912208286e-4 # Newton's constant
+const G = 2.95912208286e-4 # Newton's constant, units: [L]= AU, [M]= M_sun, [t]= Earth days 
 const ∑ = sum # symbol for sum function
 const N = 5 #Number of bodies (central star included)
 
@@ -40,6 +40,7 @@ Lx(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vy[i,:] .* x[i,:] - vx[i,:] .* y
 Ly(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (-vz[i,:] .* x[i,:] + vx[i,:] .* z[i,:]), 1:N)'
 Lz(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]), 1:N)'  
 
+export H, Lx, Ly, Lz
 #############################################################
 
 

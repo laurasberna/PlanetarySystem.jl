@@ -1,38 +1,62 @@
 using PlanetarySystem
 using RecursiveArrayTools
+using Test
 
-plotfilename="mysol.png"
-animfilename="mysol.gif"
-fifilename="firstintegrals.png"
+# The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0).
+# The test verifies the conservation of energy and angular momentum along the evolution, within chosen tolerance.
 
-#System parameters:
-#masses and names
-M = [1.00000597682, 0.000954786104043, 0.000285583733151, 0.0000437273164546, 0.0000517759138449]#, 1/1.3e8]
-invM = inv.(M)
-planets = ["Sun", "Jupiter", "Saturn", "Uranus", "Neptune"] #, "Pluto"
-#initial positions
-pos_x = [0.0,-3.5023653,9.0755314,8.3101420,11.4707666]#,-15.5387357]
-pos_y = [0.0,-3.8169847,-3.0458353,-16.2901086,-25.7294829]#,-25.2225594]
-pos_z = [0.0,-1.5507963,-1.6483708,-7.2521278,-10.8169456]#,-3.1902382]
-pos = ArrayPartition(pos_x,pos_y,pos_z)
-#initial velocities
-vel_x = [0.0,0.00565429,0.00168318,0.00354178,0.00288930]#,0.00276725]
-vel_y = [0.0,-0.00412490,0.00483525,0.00137102,0.00114527]#,-0.00170702]
-vel_z = [0.0,-0.00190589,0.00192462,0.00055029,0.00039677]#,-0.00136504]
-vel = ArrayPartition(vel_x,vel_y,vel_z)
-#time interval
-tspan = (0.,200_000.)
+tol=10^-7 # tolerance
 
-#Testing solver
-sol=NBsolution(M, vel, pos, tspan)
+@time @testset "Energy and angular momentum conservation" begin
 
-#Testing orbit plot
-myplot(sol,plotfilename,planets)
+    for j in 1:10  # loop over different random systems
+        
+        # initial conditions:
+        N=5 # number of bodies
+        M=rand(0.:0.000001:0.0001,N) # mass
+        M[1]=1. # central star mass
+        pos_x=rand(-30.:0.0001:30.,N) # initial positions
+        pos_y=rand(-30.:0.0001:30.,N)
+        pos_z=rand(-30.:0.0001:30.,N)
+        pos_x[1]=0. # central star 
+        pos_y[1]=0.
+        pos_z[1]=0.
+        pos = ArrayPartition(pos_x,pos_y,pos_z)
+        vel_x=rand(-0.01:0.00001:0.01,N) # initial velocities
+        vel_y=rand(-0.01:0.00001:0.01,N)
+        vel_z=rand(-0.01:0.00001:0.01,N)
+        vel = ArrayPartition(vel_x,vel_y,vel_z)
+        vel_x[1]=0. # central star
+        vel_y[1]=0.
+        vel_z[1]=0.
+        tspan = (0.,200_000.) # time interval
+        
+        # solution:
+        sol=NBsolution(M, vel, pos, tspan)
+        # solution partition:
+        vx=sol[1:N,:]
+        vy=sol[N+1:2*N,:]
+        vz=sol[2*N+1:3*N,:]
+        x= sol[3*N+1:4*N,:]
+        y= sol[4*N+1:5*N,:]
+        z= sol[5*N+1:6*N,:]
 
-#Testing animation 
-animation(sol,animfilename,planets)
+        # conservation test:
+        if(length(sol.t)>=5000) # test step check
+            
+            for i in 1:5000:length(sol.t) # loop over the time steps; test step=500
+                @test (H(x, y, z, vx, vy, vz, M)[1] -  H(x, y, z, vx, vy, vz, M)[i])/H(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #energy
+                @test (Lx(x, y, z, vx, vy, vz, M)[1] - Lx(x, y, z, vx, vy, vz, M)[i])/Lx(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #angular momentum x
+                @test (Ly(x, y, z, vx, vy, vz, M)[1] - Ly(x, y, z, vx, vy, vz, M)[i])/Ly(x, y, z, vx, vy, vz, M)[1]  ≈ 0 atol=10^-7 #angular momentum y
+                @test (Lz(x, y, z, vx, vy, vz, M)[1] - Lz(x, y, z, vx, vy, vz, M)[i])/Lz(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #angular momentum z
+            end
+            
+        else
+            println("reduce test step!") # alert
+        end
 
-#Testing conservation of energy and angular momentum (plot)
-plot_first_integrals(sol, M, fifilename, planets)
+     end
+    
+end
 
 

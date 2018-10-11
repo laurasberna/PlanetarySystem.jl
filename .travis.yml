@@ -11,6 +11,8 @@ notifications:
 #script: # the default script is equivalent to the following
 #  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("PlanetarySystem"); Pkg.test("PlanetarySystem"; coverage=true)';
+travis_wait mvn install
+travis_wait 30 mvn install
 after_success:
   - julia -e 'cd(Pkg.dir("PlanetarySystem")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
 #  - julia -e 'cd(Pkg.dir("PlanetarySystem")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())';

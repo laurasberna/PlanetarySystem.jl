@@ -4,6 +4,7 @@
 # https://github.com/JuliaDiffEq/DiffEqTutorials.jl/blob/master/PhysicalModels/Outer-Solar-System.ipynb
 
 module PlanetarySystem
+
 using DifferentialEquations
 using RecursiveArrayTools
 using Plots

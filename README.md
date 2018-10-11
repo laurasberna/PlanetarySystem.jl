@@ -77,7 +77,7 @@ plot_first_integrals(sol, M, fifilename, planets)
 
 ## Test
 
-The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0). The test verifies the conservation of energy and angular momentum along the evolution of 10 systems.
+The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0). The test verifies the conservation of energy and angular momentum along the evolution of 10 systems within tolerance 10^-7.
 
 ## Acknowledgements 
 

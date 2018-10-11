@@ -9,7 +9,7 @@ tol=10^-7 # tolerance
 
 @time @testset "Energy and angular momentum conservation" begin
 
-    for j in 1:10  # loop over different random systems
+    for j in 1:1  # loop over different random systems
         
         # initial conditions:
         N=5 # number of bodies

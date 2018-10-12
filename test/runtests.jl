@@ -9,7 +9,7 @@ tol=10^-7 # tolerance
 
 @time @testset "Energy and angular momentum conservation" begin
 
-    for j in 1:1  # loop over different random systems
+    for j in 1:10  # loop over different random systems
         
         # initial conditions:
         N=5 # number of bodies
@@ -45,10 +45,10 @@ tol=10^-7 # tolerance
         if(length(sol.t)>=5000) # test step check
             
             for i in 1:5000:length(sol.t) # loop over the time steps; test step=500
-                @test (H(x, y, z, vx, vy, vz, M)[1] -  H(x, y, z, vx, vy, vz, M)[i])/H(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #energy
-                @test (Lx(x, y, z, vx, vy, vz, M)[1] - Lx(x, y, z, vx, vy, vz, M)[i])/Lx(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #angular momentum x
-                @test (Ly(x, y, z, vx, vy, vz, M)[1] - Ly(x, y, z, vx, vy, vz, M)[i])/Ly(x, y, z, vx, vy, vz, M)[1]  ≈ 0 atol=10^-7 #angular momentum y
-                @test (Lz(x, y, z, vx, vy, vz, M)[1] - Lz(x, y, z, vx, vy, vz, M)[i])/Lz(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=10^-7 #angular momentum z
+                @test (H(x, y, z, vx, vy, vz, M)[1] -  H(x, y, z, vx, vy, vz, M)[i])/H(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=tol #energy
+                @test (Lx(x, y, z, vx, vy, vz, M)[1] - Lx(x, y, z, vx, vy, vz, M)[i])/Lx(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=tol #angular momentum x
+                @test (Ly(x, y, z, vx, vy, vz, M)[1] - Ly(x, y, z, vx, vy, vz, M)[i])/Ly(x, y, z, vx, vy, vz, M)[1]  ≈ 0 atol=tol #angular momentum y
+                @test (Lz(x, y, z, vx, vy, vz, M)[1] - Lz(x, y, z, vx, vy, vz, M)[i])/Lz(x, y, z, vx, vy, vz, M)[1] ≈ 0 atol=tol #angular momentum z
             end
             
         else

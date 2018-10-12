@@ -1,6 +1,6 @@
 # PlanetarySystem
 
-This Julia package was produced for an assignment of the Computational Physics course held by Erik Schnetter at Perimeter Institute, during the Fall term of 2018.
+This Julia package was produced for an assignment of the [Computational Physics course](https://github.com/eschnett/2018-computational-physics-course) held by Erik Schnetter at Perimeter Institute, during the Fall term of 2018.
 
 The package contains tools to solve an N-body problem in Newtonian gravity, and plot and animate the orbits and the consverved quantities. Distance is expressed in A.U., time in Earth days, mass in central star masses.
 
@@ -18,24 +18,30 @@ Before activating the package, add the following packages:
 ## Functions
 
 ```
+SolveAndPlot(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64}, planets::Array{String,1}, plotfilename::String, animfilename::String, fifilename::String)
+```
+Main function, solves the system and plots the orbit, the variation of the conserved quantities and  creates an animation. The variables: *M*, *vel* is the ArrayPartition of the initial velocities of all bodies (see [example](#example)), *pos* is the ArrayPartition of the initial positions of all bodies , *tspan* is the time interval, *plantes* are the bodies' names, *plotfilename* name of the orbit plot file, *animfilename* name of the animation file as *.gif, *fifilename* name of the conserved quantities plot file.
+
+```
  NBsolution(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64})
  ```
-To solve the N-Body problem.  vel is the ArrayPartition of the initial velocities of all bodies (see [example](#example)), pos is the ArrayPartition of the initial positions of all bodies, tspan is the time interval.
+Solves the N-Body problem.  
  
  ```
  myplot(sol, filename::String, planets::Array{String,1})
  ```
-To plot the orbit in 3D. sol is the output of NBsolution(), filename is the name of the file where the plot is saved, planets is the array of the planets' names.
+Plots the orbits in 3D position space. f
  
  ```
  animation(sol, filename::String, planets::Array{String,1})
  ```
- To animate the system in 3D. Expects a .gif file name. Arguments are the same as for the myplot function.
+ Creates an animation of the system in 3D. Expects a .gif file name. 
  
  ```
  plot_first_integrals(sol, M::Array{Float64,1}, filename::String, planets::Array{String,1})
  ```
-To plot the fractional variation of the conserved quantities (energy and angular momentum vector). All arguments have been described above.
+Plots the fractional variation of the conserved quantities (energy and angular momentum vector). 
+
 
 ## Example
 
@@ -64,10 +70,7 @@ vel = ArrayPartition(vel_x,vel_y,vel_z)
 
 tspan = (0.,200_000.)
 
-sol=NBsolution(M, vel, pos, tspan)
-myplot(sol,plotfilename,planets)
-animation(sol,animfilename,planets)
-plot_first_integrals(sol, M, fifilename, planets)
+SolveAndPlot(M, vel, pos, tspan, planets, plotfilename, animfilename, fifilename)
  ```
  The resulting plots:
  
@@ -77,7 +80,7 @@ plot_first_integrals(sol, M, fifilename, planets)
 
 ## Test
 
-The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0). The test verifies the conservation of energy and angular momentum along the evolution of 10 systems within tolerance 10^-7.
+The package is tested on random Solar-like systems with a central start initialized at x=(0,0,0) and v=(0,0,0). The test verifies the conservation of energy and angular momentum along the evolution of 5 randomly generated systems within tolerance 10^-7.
 
 ## Acknowledgements 
 

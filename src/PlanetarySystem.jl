@@ -42,6 +42,21 @@ Ly(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (-vz[i,:] .* x[i,:] + vx[i,:] .* 
 Lz(x, y, z, vx, vy, vz, M) =  ∑(i-> M[i] .*  (vz[i,:] .* y[i,:] - vy[i,:] .* z[i,:]), 1:N)'  
 
 export H, Lx, Ly, Lz
+
+#############################################################
+
+# Main
+export SolveAndPlot
+function SolveAndPlot(M::Array{Float64,1}, vel, pos, tspan::Tuple{Float64,Float64}, planets::Array{String,1}, plotfilename::String, animfilename::String, fifilename::String)
+
+sol=NBsolution(M, vel, pos, tspan)
+myplot(sol,plotfilename,planets)
+animation(sol,animfilename,planets)
+plot_first_integrals(sol, M, fifilename, planets)
+
+end
+
+
 #############################################################
 
 

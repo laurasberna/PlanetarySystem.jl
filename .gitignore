@@ -3,4 +3,5 @@
 *.jl.mem
 *.h5
 *.png
+*.gif
 deps/deps.jl
